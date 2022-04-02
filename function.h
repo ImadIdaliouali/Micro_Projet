@@ -19,6 +19,8 @@ process* pop_process(file f){
 	else{
 		process* pop_process = f->head;
 		f->head = f->head->next;
+		if(f->head == NULL)
+			f->tail = NULL;
 		f->size--;
 		return pop_process;
 	}
