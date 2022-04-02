@@ -1,4 +1,3 @@
-#include "struct.h"
 process* create_process(process p){
 	process* p1 = (process*)malloc(sizeof(process));
 	p1->id = p.id;
