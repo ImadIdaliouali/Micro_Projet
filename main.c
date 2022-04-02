@@ -4,7 +4,10 @@
 #include "function.h"
 int main(){
 	file f = init_file();
-	create_file(f);
-	diagramme_Gant(f);
+	int n;
+	printf("Donner le nombre des process : ");
+	scanf("%d",&n);
+	create_file(f,n);
+	diagramme_Gant(f,n);
 	return 0;
 }
