@@ -37,7 +37,7 @@ void push_FIFO(file f,process* p){
 	if(f->tail == NULL)
 		f->head = f->tail = p;
 	else{
-		if(f->tail->r_time > p->a_time){// hadi hiya li ktbdl temp d'arrive
+		if(f->tail->r_time >= p->a_time){// hadi hiya li ktbdl temp d'arrive
 			p->att_time = f->tail->a_time + f->tail->r_time - p->a_time;
 			p->a_time = f->tail->a_time + f->tail->r_time;
 		}
@@ -57,7 +57,7 @@ void push_FIFO(file f,process* p){
 // 	if(f->tail == NULL)
 // 		f->head = f->tail = p;
 // 	else{
-// 		if(f->tail->r_time > p->a_time){// hadi hiya li ktbdl temp d'arrive
+// 		if(f->tail->r_time >= p->a_time){// hadi hiya li ktbdl temp d'arrive
 // 			p->a_time = f->tail->a_time+f->tail->r_time;
 // 		}
 // 		if(f->tail->a_time < p->a_time){
@@ -99,12 +99,9 @@ void push_FIFO(file f,process* p){
 // 	}
 // 	f->size++;
 // }
-void create_file(file f){
+void create_file(file f,int n){
 	process p;
 	process* p1 = NULL;
-	int n;
-	printf("Donner le nombre des process : ");
-	scanf("%d",&n);
 	int choice;
 	t:
 	printf("Choose an push : \n");
@@ -155,23 +152,26 @@ void create_file(file f){
 		}
 	}
 }
-void diagramme_Gant(file f){
+void diagramme_Gant(file f,int n){
 	int i = 0;
+	int j;
 	printf("process :");
-	for(i=0;i<(f->size);i++){
-		printf(" %d",i);
+	for(j=1;j<=f->size;j++){
+		printf(" %d",j);
 	}
 	printf("\n");
 	process* p = NULL;
 	while(f->tail != NULL){
-		while(i < f->head->r_time){
+		while(i < f->head->a_time + f->head->r_time){
 			printf("%d       :",i);
-			for(int j=0;j < 5-(f->size);j++){
+			for(j=0;j < n-(f->size);j++){
 				printf("  ");
 			}
 			printf(" o");
-			if(f->head->next->att_time >= i)
-				printf(" x");
+			if(f->head->next != NULL){
+				if(f->head->next->a_time - f->head->next->att_time <= i)
+					printf(" x");
+			}
 			printf("\n");
 			i++;
 		}
