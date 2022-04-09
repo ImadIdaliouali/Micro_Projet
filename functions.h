@@ -1,3 +1,4 @@
+/*** Function for create the process ***/
 process* create_process(process p){
 	process *p1 = (process*)malloc(sizeof(process));
 	p1->id = p.id;
@@ -8,6 +9,7 @@ process* create_process(process p){
 	p1->next = NULL;
 	return p1;
 }
+/*** Function for Initialize the file ***/
 file init_file(){
 	file f = (file)malloc(sizeof(File));
 	f->head = NULL;
@@ -15,6 +17,7 @@ file init_file(){
 	f->size = 0;
 	return f;
 }
+/*** Pop the process in head ***/
 process* pop_process(file f){
 	if(f->tail == NULL)
 		exit(0);
@@ -27,12 +30,14 @@ process* pop_process(file f){
 		return pop_process;
 	}
 }
+/*** Read the head of the file ***/
 process* read_process(file f){
 	if(f->head == NULL)
 		exit(0);
 	else
 		return f->head;
 }
+/*** Push a process with FIFO(First In First Out) ***/
 void push_FIFO(file f, process *p){
 	if(f->tail == NULL)
 		f->head = f->tail = p;
@@ -47,19 +52,20 @@ void push_FIFO(file f, process *p){
 	}
 	f->size++;
 }
+/*** push a process with SJF(Short Job First) ***/
 void push_SJF(file f, process *p){
 	if(f->tail == NULL)
 		f->head = f->tail = p;
 	else{
 		int b;
 		process *tmp = f->head;
-		process *precedent = NULL;
+		process *previous = NULL;
 		bool q = true;
 		while(tmp != NULL && q == true){
 			if(p->a_time < tmp->a_time && tmp->r_time > p->r_time){
-				precedent->next = p;
+				previous->next = p;
 				p->next = tmp;
-				b = precedent->a_time + precedent->r_time;
+				b = previous->a_time + previous->r_time;
 				p->wait_time = b - p->a_time;
 				p->a_time += p->wait_time;
 				process *count = tmp;
@@ -73,7 +79,7 @@ void push_SJF(file f, process *p){
 				q = false;
 			}
 			else{
-				precedent = tmp;
+				previous = tmp;
 				if(tmp->next == NULL){
 					b = tmp->a_time + tmp->r_time;
 					if(b > p->a_time){
@@ -90,6 +96,7 @@ void push_SJF(file f, process *p){
 	}
 	f->size++;
 }
+/*** push a process with SRTF(Short Remaining Time First) ***/
 void push_SRTF(file f,process* p){
 	if(f->tail == NULL)
 		f->head = f->tail = p;
@@ -98,6 +105,7 @@ void push_SRTF(file f,process* p){
 	}
 	f->size++;
 }
+/*** push a process with Tourniquet ***/
 void push_tourniquet(file f,process* p){
 	if(f->tail == NULL)
 		f->head = f->tail = p;
@@ -106,6 +114,7 @@ void push_tourniquet(file f,process* p){
 	}
 	f->size++;
 }
+/*** Create the file ***/
 void create_file(file f, int n){
 	process p;
 	process *p1 = NULL;
@@ -137,11 +146,11 @@ void create_file(file f, int n){
 	printf("==================================\n");
 	for(int i = 1; i <= n; i++){
 		p.id = i;
-		printf("Donner Date d'arrivee de P%d : ", i);
+		printf("Enter Arrival time of P%d : ", i);
 		scanf("%d", &p.a_time);
-		printf("Donner Duree d'execusion de P%d : ", i);
+		printf("Enter Remaining time of P%d : ", i);
 		scanf("%d", &p.r_time);
-		printf("Donner Priorite de P%d : ", i);
+		printf("Enter Priority of P%d : ", i);
 		scanf("%d", &p.priority);
 		p1 = create_process(p);
 		switch(choice){
@@ -152,15 +161,16 @@ void create_file(file f, int n){
 				push_SJF(f, p1);
 				break;
 			case 3:
-				push_SRTF(f,p1);
+				push_SRTF(f, p1);
 				break;
 			case 4:
-				push_tourniquet(f,p1);
+				push_tourniquet(f, p1);
 				break;
 		}
 		printf("==================================\n");
 	}
 }
+/*** Display ***/
 void display(file f){
 	process* tmp = f->head;
 	printf("Tableau:\n");
@@ -173,44 +183,15 @@ void display(file f){
 	}
 	printf("+-----------+----------------+-------------------+----------+----------------+\n");
 }
-// void diagramme_Gant(file f, int n){// push_FIFO
-// 	int i = 0, j, wait_time = 0;
-// 	printf("Diagramme de Gant:\n");
-// 	printf("process  :");
-// 	for(j = 1; j <= f->size; j++){//kadir 1 2 3 4 ...
-// 		printf(" %d", j);
-// 	}
-// 	printf("\n");
-// 	process *p = NULL;
-// 	process *tmp = NULL;
-// 	while(f->tail != NULL){
-// 		while(i < f->head->a_time + f->head->r_time + wait_time){
-// 			printf("%d       ", i);
-// 			if(i <= 9)
-// 				printf(" ");
-// 			printf(":");
-// 			for(j = 0; j < n - (f->size); j++){
-// 				printf("  ");
-// 			}
-// 			printf(" o");
-// 			for(tmp = f->head->next; tmp != NULL && tmp->a_time <= i; tmp = tmp->next){
-// 				printf(" x");
-// 			}
-// 			printf("\n");
-// 			i++;
-// 		}
-// 		if(f->head->next != NULL)
-// 			wait_time = i - f->head->next->a_time;
-// 		p = pop_process(f);
-// 	}
-// }
+/*** search with id ***/
 process* search_id(file f, int i){
 	process *tmp =f->head;
 	while(tmp != NULL && tmp->id != i)
 		tmp = tmp->next;
 	return tmp;
 }
-void diagramme_Gant(file f, int n){
+/*** Gantt Chart ***/
+void Gantt_chart(file f){
 	int i = 0, j, k = 1;
 	printf("Diagramme de Gant:\n");
 	printf("process  :");
@@ -220,7 +201,6 @@ void diagramme_Gant(file f, int n){
 	printf("\n");
 	process *p = NULL;
 	process *tmp = NULL;
-	process *count = NULL;
 	while(f->tail != NULL){
 		while(i < f->head->a_time + f->head->r_time){
 			printf("%d       ", i);
@@ -230,31 +210,27 @@ void diagramme_Gant(file f, int n){
 			for(j = 1; j < k; j++){
 				printf("  ");
 			}
-			count = f->head;
 			if(f->head->id == k){
 				printf(" o");
-				for(tmp = count->next; tmp != NULL; tmp = tmp->next){
+				for(tmp = f->head->next; tmp != NULL; tmp = tmp->next){
 					if(tmp->a_time - tmp->wait_time <= i)
 						printf(" x");
 				}
 			}
 			else{
 				int d = k;
-				process *count = search_id(f, d);
-				while(count != NULL){
-					if(count->id != f->head->id){
-						if(count->a_time - count->wait_time <= i){
+				tmp = search_id(f, d);
+				while(tmp != NULL){
+					if(tmp->id != f->head->id){
+						if(tmp->a_time - tmp->wait_time <= i)
 							printf(" x");
-						}
-						else{
+						else
 							printf(" o");
-						}
 					}
-					else{
+					else
 						printf(" o");
-					}
 					d++;
-					count = search_id(f, d);
+					tmp = search_id(f, d);
 				}
 			}
 			printf("\n");
