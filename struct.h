@@ -1,14 +1,14 @@
 typedef struct Process{
-	int id;
-	int r_time;// temp d'execusion
-	int a_time;// temp d'arrive
-	int wait_time;// temp d'attente
-	int priority;// Priorite
+	int id;// the id of the process
+	int r_time;// Remaining time
+	int a_time;// Arrival time
+	int priority;// Priority
+	int wait_time;// Waiting time
 	struct Process* next;
 }process;
 typedef struct{
-	process* head;// tete de la file
-	process* tail;// queue de la file
-	int size;
+	process* head;// head of file
+	process* tail;// tail of file
+	int size;// size of file
 }File;
 typedef File* file;
