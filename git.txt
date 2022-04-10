@@ -6,5 +6,11 @@ git commit -m "commit message"
 git log
 git checkout <commit-hash> or BranchName
 git branch NewBranchName(Create a New Branch or display all the branchs if BranchName==NULL)
+git checkout -b <name-of-your-branch>
 default master
 git merge BranchName
+git branch -d <branch-name>
+git push -u <remote> <branch-name>
+git push -u origin <branch_name>
+git pull <remote> 
+git clone 
