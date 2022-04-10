@@ -1,0 +1,9 @@
+git init
+git status
+git add FileName
+git add .
+git commit -m "commit message"
+git log
+git checkout <commit-hash> or BranchName
+git branch NewBranchName(Create a New Branch or display all the branchs if BranchName==NULL)
+default master
